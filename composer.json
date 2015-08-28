@@ -1,5 +1,5 @@
 {
-    "name": "slick/Configuration",
+    "name": "slick/configuration",
     "description": "Configuration component for Slick Framework",
     "license": "MIT",
     "keywords": ["slick", "configuration"],
