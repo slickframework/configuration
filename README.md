@@ -11,8 +11,6 @@
 interface that you can use to set your own configuration drivers. By default it uses the PHP arrays
 for configuration as it does not need any parser and therefore is more performance friendly.
 
-This package is extracted from [Slick framework](https://github.com/slickframework/slick).
-
 This package is compliant with PSR-2 code standards and PSR-4 autoload standards. It
 also applies the [semantic version 2.0.0](http://semver.org) specification.
 
