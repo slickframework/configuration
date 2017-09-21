@@ -17,13 +17,9 @@
     }
   ],
   "require": {
-    "php" : ">=5.4.0",
-    "slick/common": "@dev"
   },
   "require-dev": {
-    "phpunit/phpunit" : "4.*",
-    "scrutinizer/ocular": "~1.1",
-    "behat/behat": "~3.0.4"
+
   },
   "autoload": {
     "psr-4": {
@@ -35,7 +31,7 @@
       "Slick\\Tests\\Configuration\\": "tests"
     }
   },
-  "version": "v1.1.0",
+  "version": "v1.2.0",
   "extra": {
     "branch-alias": {
       "dev-master": "1.1-dev",
