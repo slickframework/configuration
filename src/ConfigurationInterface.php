@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of slick/configuration package
+ * This file is part of slick/configuration
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,15 +9,13 @@
 
 namespace Slick\Configuration;
 
-use Slick\Configuration\Driver\DriverInterface;
 
 /**
  * ConfigurationInterface, defines a configuration driver
  *
  * @package Slick\Configuration
- * @author  Filipe Silva <silvam.filipe@gmail.com>
  */
-interface ConfigurationInterface extends DriverInterface
+interface ConfigurationInterface
 {
 
     /**
