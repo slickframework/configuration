@@ -9,6 +9,8 @@
 
 namespace Slick\Configuration\Driver;
 
+use Slick\Configuration\Exception\FileNotFoundException;
+
 /**
  * Common Driver Methods Trait
  *
@@ -21,6 +23,22 @@ trait CommonDriverMethods
      * @var array
      */
     protected $data = [];
+
+    /**
+     * Checks if provided file exists
+     *
+     * @param string $file
+     *
+     * @throws FileNotFoundException if provided file does not exists
+     */
+    protected function checkFile($file)
+    {
+        if (! is_file($file)) {
+            throw new FileNotFoundException(
+                "Configuration file {$file} could not be found."
+            );
+        }
+    }
 
     /**
      * Returns the value store with provided key or the default value.

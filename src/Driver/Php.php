@@ -10,7 +10,6 @@
 namespace Slick\Configuration\Driver;
 
 use Slick\Configuration\ConfigurationInterface;
-use Slick\Configuration\Exception\FileNotFoundException;
 use Slick\Configuration\Exception\ParserErrorException;
 
 /**
@@ -34,11 +33,7 @@ class Php implements ConfigurationInterface
      */
     public function __construct($filePath)
     {
-        if (! is_file($filePath)) {
-            throw new FileNotFoundException(
-                "Configuration file {$filePath} could not be found."
-            );
-        }
+        $this->checkFile($filePath);
 
         $this->filePath = $filePath;
         $this->loadSettings();

@@ -10,37 +10,38 @@
 namespace spec\Slick\Configuration\Driver;
 
 use Slick\Configuration\ConfigurationInterface;
-use Slick\Configuration\Driver\Php;
+use Slick\Configuration\Driver\Ini;
 use PhpSpec\ObjectBehavior;
 use Slick\Configuration\Exception\FileNotFoundException;
 use Slick\Configuration\Exception\ParserErrorException;
 
 /**
- * Php Specs
+ * Ini Specs
  *
  * @package spec\Slick\Configuration\Driver
  */
-class PhpSpec extends ObjectBehavior
+class IniSpec extends ObjectBehavior
 {
+
     private $file;
 
     private $dummyFile;
 
     function let()
     {
-        $this->file = __DIR__ . '/fixtures/settings.php';
+        $this->file = __DIR__ . '/fixtures/settings.ini';
         $this->dummyFile = __DIR__ . '/fixtures/dummy.txt';
         $this->beConstructedWith($this->file);
     }
 
-    function its_a_configuration_driver_for_php_arrays()
+    function its_a_configuration_driver_for_ini_configuration_files()
     {
         $this->shouldBeAnInstanceOf(ConfigurationInterface::class);
     }
 
     function it_is_initializable_with_a_path_to_a_settings_file()
     {
-        $this->shouldHaveType(Php::class);
+        $this->shouldHaveType(Ini::class);
     }
 
     function it_throws_an_exception_if_settings_file_cannot_be_found()
