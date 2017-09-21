@@ -37,7 +37,7 @@ $ composer test
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
+Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CONDUCT.md) for details.
 
 ## Security
 
@@ -63,4 +63,4 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [link-scrutinizer]: https://scrutinizer-ci.com/g/slickframework/configuration/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/slickframework/configuration
 [link-downloads]: https://packagist.org/packages/slickframework/configuration
-[link-contributors]: ../../contributors
+[link-contributors]: https://github.com/slickframework/configuration/graphs/contributors
