@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- Environment variables driver: read from environment
+- New `ConfigurationChainInterface` to combine multiple configuration drivers
 - Use PHPSpec for unit tests 
 - Code of conduct
 - Issue template
