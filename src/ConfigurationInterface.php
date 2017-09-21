@@ -9,7 +9,6 @@
 
 namespace Slick\Configuration;
 
-
 /**
  * ConfigurationInterface, defines a configuration driver
  *

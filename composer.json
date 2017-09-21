@@ -19,7 +19,8 @@
   "require": {
   },
   "require-dev": {
-    "phpspec/phpspec": "^3.4"
+    "phpspec/phpspec": "^3.4",
+    "squizlabs/php_codesniffer": "^3.1"
   },
   "autoload": {
     "psr-4": {
@@ -37,5 +38,13 @@
       "dev-master": "1.1-dev",
       "dev-develop": "1.2-dev"
     }
+  },
+  "scripts": {
+    "test": "phpspec run -fdot",
+    "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
+    "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src"
+  },
+  "config": {
+    "sort-packages": true
   }
 }
