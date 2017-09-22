@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- New `Slick\Configuration\PriorityConfigurationChain`
 - Environment variables driver: read from environment
 - New `ConfigurationChainInterface` to combine multiple configuration drivers
 - Use PHPSpec for unit tests 
@@ -14,6 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Issue template
 - Pull request template
 - Documentation on [Read the docs](https://readthedocs.org/)
+
+### Changed
+- `Slick\Configuration::get()` method now returns a `Slick\Configuration\PriorityConfigurationChain`
 
 ### Removed
 - The deprecated `Slick\Driver\DriverInterface`

@@ -9,13 +9,13 @@ any parser and therefore is more performance friendly.
 Installation
 ------------
 
-`slick/configuration` is a php 5.6+ library that you’ll have in your project development
+``slick/configuration`` is a php 5.6+ library that you’ll have in your project development
 environment. Before you begin, ensure that you have PHP 5.6 or higher installed.
 
-You can install `slick/configuration` with all its dependencies through Composer. Follow
+You can install ``slick/configuration`` with all its dependencies through Composer. Follow
 instructions on the `composer website`_ if you don’t have it installed yet.
 
-You can use this Composer command to install `slick/configuration`:
+You can use this Composer command to install ``slick/configuration``:
 
 .. code-block:: bash
 
