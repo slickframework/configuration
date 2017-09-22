@@ -25,7 +25,7 @@ $ composer require slick/configuration
 
 Lets start by creating a configuration file:
 
-``` sourceCode
+``` php
 <?php
 /**
  * App configuration file
@@ -46,7 +46,7 @@ we save this file as `./settings.php`. We are using plain PHP arrays for configu
 
 Now we will use the `Slick\Configuration\Configuration` factory o create our `Slick\Configuration\ConfigurationInterface`:
 
-``` sourceCode
+``` php
 use Slick\Configuration\Configuration;
 
 $settings = Configuration::get('settings');
@@ -58,7 +58,7 @@ Its really simple.
 
 Now lets use it.
 
-``` sourceCode
+``` php
 print_r($settings->get('application'));
 
 # the output form above is:
@@ -70,7 +70,7 @@ print_r($settings->get('application'));
 
 You can set any level of nesting in your configuration array but as you add another level to the array it becomes harder to use. Please check the example bellow:
 
-``` sourceCode
+``` php
 $value = $settings->get('application')['version'];
 // OR
 $appSettings = $settings->get('application');
@@ -79,7 +79,7 @@ $value = $appSettings['version'];
 
 To simplify you ca use a “dot notation” to rich a deeper level.
 
-``` sourceCode
+``` php
 $value = $settings->get('application.version');
 ```
 
@@ -87,7 +87,7 @@ $value = $settings->get('application.version');
 
 It is possible to have a default value when no key is found on a configuration driver. By default if a key is not found a `NULL` is returned but if you specify a value it will be returned by the `ConfigurationInterface::get()` method:
 
-``` sourceCode
+``` php
 $value = $settings->get('application.rows-per-page', 10);
 print $value;
 
