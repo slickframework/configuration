@@ -11,7 +11,7 @@ Basic usage
 
 Lets start by creating a configuration file:
 
-.. code-block:: PHP
+.. code-block:: php
 
     <?php
     /**
@@ -37,7 +37,7 @@ Creating a Configuration
 Now we will use the ``Slick\Configuration\Configuration`` factory o create our
 ``Slick\Configuration\ConfigurationInterface``:
 
-.. code-block:: PHP
+.. code-block:: php
 
     use Slick\Configuration\Configuration;
 
@@ -50,7 +50,7 @@ Retrieving values
 
 Now lets use it.
 
-.. code-block:: PHP
+.. code-block:: php
 
     print_r($settings->get('application'));
 
@@ -64,7 +64,7 @@ You can set any level of nesting in your configuration array but as you add anot
 level to the array it becomes harder to use. Please check the example bellow:
 
 
-.. code-block:: PHP
+.. code-block:: php
 
     $value = $settings->get('application')['version'];
     // OR
@@ -73,7 +73,7 @@ level to the array it becomes harder to use. Please check the example bellow:
 
 To simplify you ca use a "dot notation" to rich a deeper level.
 
-.. code-block:: PHP
+.. code-block:: php
 
     $value = $settings->get('application.version');
 
@@ -84,9 +84,9 @@ It is possible to have a default value when no key is found on a configuration d
 default if a key is not found a ``NULL`` is returned but if you specify a value it will
 be returned by the ``ConfigurationInterface::get()`` method:
 
-.. code-block:: PHP
+.. code-block:: php
 
-    $value = $settings->get('application.rows-per-page', 10);
+    $value = $settings->get('application.rowsPerPage', 10);
     print $value;
 
     # the output form above is:

@@ -88,7 +88,7 @@ $value = $settings->get('application.version');
 It is possible to have a default value when no key is found on a configuration driver. By default if a key is not found a `NULL` is returned but if you specify a value it will be returned by the `ConfigurationInterface::get()` method:
 
 ``` php
-$value = $settings->get('application.rows-per-page', 10);
+$value = $settings->get('application.rowsPerPage', 10);
 print $value;
 
 # the output form above is:
