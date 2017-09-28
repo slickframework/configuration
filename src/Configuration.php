@@ -9,6 +9,7 @@
 
 namespace Slick\Configuration;
 
+use Slick\Configuration\Driver\Environment;
 use Slick\Configuration\Driver\Ini;
 use Slick\Configuration\Driver\Php;
 use Slick\Configuration\Exception\InvalidArgumentException;
@@ -25,6 +26,7 @@ class Configuration
      */
     const DRIVER_INI = Ini::class;
     const DRIVER_PHP = Php::class;
+    const DRIVER_ENV = Environment::class;
     /**@#- */
 
     private $extensionToDriver = [
