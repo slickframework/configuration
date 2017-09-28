@@ -74,6 +74,8 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
      */
     public function add(ConfigurationInterface $config, $priority = 0)
     {
+        // TODO: This cannot be implemented with a queue
+        // Should be implemented with a custom ordered list
         $this->queue->insert($config, $priority);
         return $this;
     }

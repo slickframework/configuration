@@ -19,7 +19,7 @@ use Slick\Configuration\Exception\InvalidArgumentException;
  *
  * @package Slick\Configuration
 */
-class Configuration
+final class Configuration
 {
     /**@#+
      * Known configuration drivers
@@ -37,7 +37,7 @@ class Configuration
     /**
      * @var array
      */
-    private $options;
+    private $file;
 
     /**
      * @var null|string
@@ -52,14 +52,37 @@ class Configuration
      */
     public function __construct(array $options = [], $driverClass = null)
     {
-        $this->options = $options;
+        $this->file = $options;
         $this->driverClass = $driverClass;
     }
 
+    /**
+     * @return PriorityConfigurationChain|ConfigurationInterface
+     */
     public function initialize()
     {
-        $reflection = new \ReflectionClass($this->driverClass());
-        return $reflection->newInstanceArgs($this->options);
+        $current = 110;
+        $chain = new PriorityConfigurationChain();
+        $options = is_array(reset($this->file))
+            ? $this->file
+            : [$this->file];
+
+        foreach ($options as $option) {
+
+            $priority          = isset($option[2]) ? $option[2] : $current;
+            $this->driverClass = isset($option[1]) ? $option[1] : null;
+            $this->file        = isset($option[0]) ? $option[0] : [];
+
+            $reflection = new \ReflectionClass($this->driverClass());
+            /** @var ConfigurationInterface $config */
+            $config = $reflection->hasMethod('__construct')
+                ? $reflection->newInstanceArgs([$this->file])
+                : $reflection->newInstance();
+            $chain->add($config, $priority -= 10);
+            $current = $priority;
+        }
+
+        return $chain;
     }
 
     /**
@@ -70,8 +93,7 @@ class Configuration
     private function driverClass()
     {
         if (null == $this->driverClass) {
-            $file = reset($this->options);
-            $this->driverClass = $this->determineDriver($file);
+            $this->driverClass = $this->determineDriver($this->file);
         }
         return $this->driverClass;
     }
@@ -79,6 +101,7 @@ class Configuration
     /**
      * Tries to determine the driver class based on given file
      *
+     * @param string $file
      * @return mixed
      */
     private function determineDriver($file)
@@ -88,7 +111,7 @@ class Configuration
             "the correct driver class."
         );
 
-        if (is_null($file)) {
+        if (is_null($file) || ! is_string($file)) {
             throw $exception;
         }
 
