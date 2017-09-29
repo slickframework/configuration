@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of slick/configuration package
+ * This file is part of slick/configuration
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,64 +9,99 @@
 
 namespace Slick\Configuration;
 
-use ReflectionClass;
-use Slick\Common\Base;
-use Slick\Configuration\Exception;
+use Slick\Configuration\Driver\Environment;
+use Slick\Configuration\Driver\Ini;
+use Slick\Configuration\Driver\Php;
+use Slick\Configuration\Exception\InvalidArgumentException;
 
 /**
- * Factory class to create configuration driver objects
+ * Configuration
  *
  * @package Slick\Configuration
- *
- * @property string $type Configuration driver class name
- * @property string $file The file containing the configuration data
- */
-final class Configuration extends Base
+*/
+final class Configuration
 {
-
     /**@#+
      * Known configuration drivers
      */
-    const DRIVER_INI = 'Slick\Configuration\Driver\Ini';
-    const DRIVER_PHP = 'Slick\Configuration\Driver\Php';
+    const DRIVER_INI = Ini::class;
+    const DRIVER_PHP = Php::class;
+    const DRIVER_ENV = Environment::class;
     /**@#- */
 
-    private static $interface = 'Slick\Configuration\Driver\DriverInterface';
-
-    /**
-     * @var string[] A list of available paths where configuration file are in
-     */
-    private static $paths = ['./'];
-
-    /**
-     * @var array Extensions for driver file types
-     */
-    private static $extensions = [
-        self::DRIVER_PHP => '.php',
-        self::DRIVER_INI => '.ini'
+    private $extensionToDriver = [
+        'ini' => self::DRIVER_INI,
+        'php' => self::DRIVER_PHP,
     ];
 
     /**
-     * @readwrite
      * @var string
      */
-    protected $type = self::DRIVER_PHP;
+    private $file;
 
     /**
-     * @readwrite
-     * @var string
+     * @var null|string
      */
-    protected $file;
+    private $driverClass;
+
+    private static $paths = [
+        './'
+    ];
 
     /**
-     * Returns a configuration driver
+     * Creates a configuration factory
      *
-     * @return ConfigurationInterface
+     * @param string|array $options
+     * @param null         $driverClass
+     */
+    public function __construct($options = null, $driverClass = null)
+    {
+        $this->file = $options;
+        $this->driverClass = $driverClass;
+        self::addPath(getcwd());
+    }
+
+    /**
+     * Creates a ConfigurationInterface with passed arguments
+     *
+     * @param string|array $fileName
+     * @param null         $driverClass
+     *
+     * @return ConfigurationInterface|PriorityConfigurationChain
+     */
+    public static function get($fileName, $driverClass = null)
+    {
+        $configuration = new Configuration($fileName, $driverClass);
+        return $configuration->initialize();
+    }
+
+    /**
+     * @return PriorityConfigurationChain|ConfigurationInterface
      */
     public function initialize()
     {
-        $this->checkClass();
-        return new $this->type(['file' => $this->file]);
+        $chain = new PriorityConfigurationChain();
+
+        $options =  (is_array($this->file))
+            ? $this->file
+            : [[$this->file]];
+
+        foreach ($options as $option) {
+            $this->driverClass = isset($option[1]) ? $option[1] : null;
+            $this->file        = isset($option[0]) ? $this->composeFileName($option[0]) : null;
+            $priority          = isset($option[2]) ? $option[2] : 0;
+
+            $reflection = new \ReflectionClass($this->driverClass());
+
+            /** @var ConfigurationInterface $config */
+            $config = $reflection->hasMethod('__construct')
+                ? $reflection->newInstanceArgs([$this->file])
+                : $reflection->newInstance();
+
+            $chain->add($config, $priority);
+        }
+
+        return $chain;
     }
 
     /**
@@ -83,65 +118,125 @@ final class Configuration extends Base
     }
 
     /**
-     * Factory method to search and parse the provided name
+     * Returns the driver class to be initialized
      *
-     * @param string $file the file name
-     * @param string $type parser class
-     *
-     * @return ConfigurationInterface
+     * @return mixed|null|string
      */
-    public static function get($file, $type = self::DRIVER_PHP)
+    private function driverClass()
     {
-        $configuration = new Configuration(
-            [
-                'type' => $type,
-                'file' => self::getFileName($file, $type)
-            ]
-        );
-        return $configuration->initialize();
+        if (null == $this->driverClass) {
+            $this->driverClass = $this->determineDriver($this->file);
+        }
+        return $this->driverClass;
     }
 
     /**
-     * Check for files in the defined paths
+     * Tries to determine the driver class based on given file
      *
      * @param string $file
-     * @param string $type
+     * @return mixed
+     */
+    private function determineDriver($file)
+    {
+        $exception = new InvalidArgumentException(
+            "Cannot initialize the configuration driver. I could not determine " .
+            "the correct driver class."
+        );
+
+        if (is_null($file) || ! is_string($file)) {
+            throw $exception;
+        }
+
+        $nameDivision = explode('.', $file);
+        $extension = strtolower(end($nameDivision));
+
+        if (! array_key_exists($extension, $this->extensionToDriver)) {
+            throw $exception;
+        }
+
+        return $this->extensionToDriver[$extension];
+    }
+
+    /**
+     * Compose the filename with existing paths and return when match
+     *
+     * If no match is found the $name is returned as is;
+     * If no extension is given it will add it from driver class map;
+     * By default it will try to find <$name>.php file
+     *
+     * @param  string $name
      *
      * @return string
      */
-    private static function getFileName($file, $type)
+    private function composeFileName($name)
     {
-        $extension = array_key_exists($type, self::$extensions)
-            ? self::$extensions[$type]
-            : null;
-
-        foreach (self::$paths as $path) {
-            $fileName = "{$path}/{$file}{$extension}";
-            if (file_exists($fileName)) {
-                $file = $fileName;
-                break;
-            }
+        if (is_null($name)) {
+            return $name;
         }
-        return $file;
+
+        $ext = $this->determineExtension();
+        $withExtension = $this->createName($name, $ext);
+
+        list($found, $fileName) = $this->searchFor($name, $withExtension);
+
+        return $found ? $fileName : $name;
     }
 
     /**
-     * Check if type is a valid configuration driver
+     * Determine the extension based on the driver class
+     *
+     * If there is no driver class given it will default to .php
+     *
+     * @return string
      */
-    private function checkClass()
+    private function determineExtension()
     {
-        if (!class_exists($this->type)) {
-            throw new Exception\InvalidArgumentException(
-                "Configuration class '{$this->type}' not found"
-            );
+        $ext = 'php';
+        if (in_array($this->driverClass, $this->extensionToDriver)) {
+            $map = array_flip($this->extensionToDriver);
+            $ext = $map[$this->driverClass];
+        }
+        return $ext;
+    }
+
+    /**
+     * Creates the name with the extension for known names
+     *
+     * @param string $name
+     * @param string $ext
+     *
+     * @return string
+     */
+    private function createName($name, $ext)
+    {
+        $withExtension = $name;
+        if (!preg_match('/.*\.(ini|php)/i', $name)) {
+            $withExtension = "{$name}.{$ext}";
+        }
+        return $withExtension;
+    }
+
+    /**
+     * Search for name in the list of paths
+     *
+     * @param string $name
+     * @param string $withExtension
+     *
+     * @return array
+     */
+    private function searchFor($name, $withExtension)
+    {
+        $found = false;
+        $fileName = $name;
+
+        foreach (self::$paths as $path) {
+            $fileName = "{$path}/$withExtension";
+            if (is_file($fileName)) {
+                $found = true;
+                break;
+            }
         }
 
-        $reflection = new ReflectionClass($this->type);
-        if (!$reflection->implementsInterface(self::$interface)) {
-            throw new Exception\InvalidArgumentException(
-                "Class '{$this->type}' does not implement " .
-                "Slick\\Configuration\\ConfigurationInterface"
-            );
-        }
+        return [$found, $fileName];
     }
 }

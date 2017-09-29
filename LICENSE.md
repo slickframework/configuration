@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 
-Copyright (c) 2014-2015 Slick Framework <silvam.filipe@gmail.com>
+Copyright (c) 2014-2017 Slick Team slick.framework@gmail.com
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy
 > of this software and associated documentation files (the "Software"), to deal
