@@ -82,23 +82,11 @@ final class Configuration
     {
         $chain = new PriorityConfigurationChain();
 
-        $options =  (is_array($this->file))
-            ? $this->file
-            : [[$this->file]];
+        $options = $this->fixOptions();
 
         foreach ($options as $option) {
-            $this->driverClass = isset($option[1]) ? $option[1] : null;
-            $this->file        = isset($option[0]) ? $this->composeFileName($option[0]) : null;
-            $priority          = isset($option[2]) ? $option[2] : 0;
-
-            $reflection = new \ReflectionClass($this->driverClass());
-
-            /** @var ConfigurationInterface $config */
-            $config = $reflection->hasMethod('__construct')
-                ? $reflection->newInstanceArgs([$this->file])
-                : $reflection->newInstance();
-
-            $chain->add($config, $priority);
+            $priority = $this->setProperties($option);
+            $chain->add($this->createConfigurationDriver(), $priority);
         }
 
         return $chain;
@@ -238,5 +226,49 @@ final class Configuration
         }
 
         return [$found, $fileName];
+    }
+
+    /**
+     * Creates the configuration driver from current properties
+     *
+     * @return ConfigurationInterface
+     */
+    private function createConfigurationDriver()
+    {
+        $reflection = new \ReflectionClass($this->driverClass());
+
+        /** @var ConfigurationInterface $config */
+        $config = $reflection->hasMethod('__construct')
+            ? $reflection->newInstanceArgs([$this->file])
+            : $reflection->newInstance();
+        return $config;
+    }
+
+    /**
+     * Sets the file and driver class
+     *
+     * @param array $option
+     *
+     * @return int
+     */
+    private function setProperties($option)
+    {
+        $priority = isset($option[2]) ? $option[2] : 0;
+        $this->driverClass = isset($option[1]) ? $option[1] : null;
+        $this->file = isset($option[0]) ? $this->composeFileName($option[0]) : null;
+        return $priority;
+    }
+
+    /**
+     * Fixes the file for initialization
+     *
+     * @return array
+     */
+    private function fixOptions()
+    {
+        $options = (is_array($this->file))
+            ? $this->file
+            : [[$this->file]];
+        return $options;
     }
 }
