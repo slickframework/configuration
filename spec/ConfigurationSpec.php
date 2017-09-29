@@ -26,10 +26,15 @@ class ConfigurationSpec extends ObjectBehavior
 {
     private $settingsFile;
 
+    public function __construct()
+    {
+        Configuration::addPath(__DIR__.'/Driver/fixtures');
+    }
+
     function let()
     {
-        $this->settingsFile = __DIR__.'/Driver/fixtures/settings.php';
-        $this->beConstructedWith([$this->settingsFile]);
+        $this->settingsFile = 'settings';
+        $this->beConstructedWith($this->settingsFile);
     }
 
     function it_is_initializable_with_a_driver_class_and_options()
@@ -46,7 +51,7 @@ class ConfigurationSpec extends ObjectBehavior
 
     function it_can_determine_the_driver_for_a_given_file_extension()
     {
-        $this->beConstructedWith( [__DIR__.'/Driver/fixtures/settings.ini']);
+        $this->beConstructedWith(__DIR__.'/Driver/fixtures/settings.ini');
         $chain = $this->initialize();
         $chain->shouldBeAnInstanceOf(PriorityConfigurationChain::class);
         $chain->priorityList()->asArray()[0]->shouldBeAnInstanceOf(Ini::class);
@@ -54,14 +59,14 @@ class ConfigurationSpec extends ObjectBehavior
 
     function it_throws_an_Exception_when_file_cannot_be_found()
     {
-        $this->beConstructedWith([]);
+        $this->beConstructedWith();
         $this->shouldThrow(InvalidArgumentException::class)
             ->during('initialize');
     }
 
     function it_throws_an_Exception_when_file_extension_is_unknown()
     {
-        $this->beConstructedWith(['settings.cfg']);
+        $this->beConstructedWith('settings.cfg');
         $this->shouldThrow(InvalidArgumentException::class)
             ->during('initialize');
     }
@@ -70,7 +75,7 @@ class ConfigurationSpec extends ObjectBehavior
     {
         $this->beConstructedWith([
             [null, Configuration::DRIVER_ENV],
-            [$this->settingsFile],
+            [$this->settingsFile, null, 10],
             [__DIR__.'/Driver/fixtures/settings.ini']
         ]);
         $chain = $this->initialize();

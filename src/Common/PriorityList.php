@@ -43,6 +43,7 @@ class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
     {
         $data = [];
         $inserted = false;
+        $priority = $priority === 0 ? $this->lastPriority : $priority;
 
         foreach ($this->data as $datum) {
             $inserted = $this->tryToInsert($element, $priority, $data, $datum);

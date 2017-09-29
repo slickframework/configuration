@@ -34,7 +34,7 @@ class Environment implements ConfigurationInterface
         $value = $default;
         $fromEnvironment = getenv($this->transformKey($key));
 
-        if ($fromEnvironment !== false ) {
+        if ($fromEnvironment !== false) {
             $value = $fromEnvironment;
             self::setValue($key, $value, $this->data);
         }
