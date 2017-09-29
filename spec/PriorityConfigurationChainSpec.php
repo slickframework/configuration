@@ -9,6 +9,7 @@
 
 namespace spec\Slick\Configuration;
 
+use Slick\Configuration\Common\PriorityList;
 use Slick\Configuration\ConfigurationChainInterface;
 use Slick\Configuration\ConfigurationInterface;
 use Slick\Configuration\PriorityConfigurationChain;
@@ -42,10 +43,10 @@ class PriorityConfigurationChainSpec extends ObjectBehavior
         ConfigurationInterface $driverB
     )
     {
-        $this->add($driverA ,10);
-        $this->add($driverB, 100);
-        $this->queue()->shouldBeAnInstanceOf(\SplPriorityQueue::class);
-        $this->queue()->top()->shouldBe($driverB);
+        $this->add($driverA ,100);
+        $this->add($driverB, 10);
+        $this->priorityList()->shouldBeAnInstanceOf(PriorityList::class);
+        $this->priorityList()->asArray()[0]->shouldBe($driverB);
     }
 
     function it_retrieves_a_configuration_value_stored_under_a_key(
@@ -53,8 +54,8 @@ class PriorityConfigurationChainSpec extends ObjectBehavior
         ConfigurationInterface $driverB
     )
     {
-        $this->add($driverA ,10);
-        $this->add($driverB, 100);
+        $this->add($driverA ,100);
+        $this->add($driverB, 10);
 
         $driverA->get('foo', false)->willReturn('fooA');
         $driverB->get('foo', false)->willReturn(false);
@@ -69,8 +70,8 @@ class PriorityConfigurationChainSpec extends ObjectBehavior
         ConfigurationInterface $driverB
     )
     {
-        $this->add($driverA ,10);
-        $this->add($driverB, 100);
+        $this->add($driverA ,100);
+        $this->add($driverB, 10);
 
         $driverA->get('bar', false)->willReturn('fooA');
         $driverB->get('bar', false)->willReturn('fooB');

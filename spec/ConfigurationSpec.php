@@ -41,7 +41,7 @@ class ConfigurationSpec extends ObjectBehavior
     {
         $chain = $this->initialize();
         $chain->shouldBeAnInstanceOf(PriorityConfigurationChain::class);
-        $chain->queue()->current()->shouldBeAnInstanceOf(Php::class);
+        $chain->priorityList()->asArray()[0]->shouldBeAnInstanceOf(Php::class);
     }
 
     function it_can_determine_the_driver_for_a_given_file_extension()
@@ -49,7 +49,7 @@ class ConfigurationSpec extends ObjectBehavior
         $this->beConstructedWith( [__DIR__.'/Driver/fixtures/settings.ini']);
         $chain = $this->initialize();
         $chain->shouldBeAnInstanceOf(PriorityConfigurationChain::class);
-        $chain->queue()->current()->shouldBeAnInstanceOf(Ini::class);
+        $chain->priorityList()->asArray()[0]->shouldBeAnInstanceOf(Ini::class);
     }
 
     function it_throws_an_Exception_when_file_cannot_be_found()
@@ -75,11 +75,9 @@ class ConfigurationSpec extends ObjectBehavior
         ]);
         $chain = $this->initialize();
         $chain->shouldBeAnInstanceOf(PriorityConfigurationChain::class);
-        $chain->queue()->current()->shouldBeAnInstanceOf(Environment::class);
-        $chain->queue()->next();
-        $chain->queue()->current()->shouldBeAnInstanceOf(Php::class);
-        $chain->queue()->next();
-        $chain->queue()->current()->shouldBeAnInstanceOf(Ini::class);
+        $chain->priorityList()->asArray()[0]->shouldBeAnInstanceOf(Environment::class);
+        $chain->priorityList()->asArray()[1]->shouldBeAnInstanceOf(Php::class);
+        $chain->priorityList()->asArray()[2]->shouldBeAnInstanceOf(Ini::class);
 
     }
 

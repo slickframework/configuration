@@ -9,6 +9,7 @@
 
 namespace Slick\Configuration;
 
+use Slick\Configuration\Common\PriorityList;
 use Slick\Configuration\Driver\CommonDriverMethods;
 
 /**
@@ -20,9 +21,9 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
 {
 
     /**
-     * @var \SplPriorityQueue|ConfigurationInterface[]
+     * @var PriorityList|ConfigurationInterface[]
      */
-    private $queue;
+    private $priorityList;
 
     use CommonDriverMethods;
 
@@ -31,7 +32,7 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
      */
     public function __construct()
     {
-        $this->queue = new \SplPriorityQueue();
+        $this->priorityList = new PriorityList();
     }
 
     /**
@@ -50,7 +51,7 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
             return $stored;
         }
 
-        foreach ($this->queue as $driver) {
+        foreach ($this->priorityList as $driver) {
             $value = $driver->get($key, false);
             if ($value !== false) {
                 $default = $value;
@@ -74,19 +75,17 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
      */
     public function add(ConfigurationInterface $config, $priority = 0)
     {
-        // TODO: This cannot be implemented with a queue
-        // Should be implemented with a custom ordered list
-        $this->queue->insert($config, $priority);
+        $this->priorityList->insert($config, $priority);
         return $this;
     }
 
     /**
      * Returns the internal configuration driver chain
      *
-     * @return ConfigurationInterface[]|\SplPriorityQueue
+     * @return ConfigurationInterface[]|PriorityList
      */
-    public function queue()
+    public function priorityList()
     {
-        return $this->queue;
+        return $this->priorityList;
     }
 }

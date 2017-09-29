@@ -61,7 +61,6 @@ final class Configuration
      */
     public function initialize()
     {
-        $current = 110;
         $chain = new PriorityConfigurationChain();
         $options = is_array(reset($this->file))
             ? $this->file
@@ -69,7 +68,7 @@ final class Configuration
 
         foreach ($options as $option) {
 
-            $priority          = isset($option[2]) ? $option[2] : $current;
+            $priority          = isset($option[2]) ? $option[2] : 0;
             $this->driverClass = isset($option[1]) ? $option[1] : null;
             $this->file        = isset($option[0]) ? $option[0] : [];
 
@@ -78,8 +77,7 @@ final class Configuration
             $config = $reflection->hasMethod('__construct')
                 ? $reflection->newInstanceArgs([$this->file])
                 : $reflection->newInstance();
-            $chain->add($config, $priority -= 10);
-            $current = $priority;
+            $chain->add($config, $priority);
         }
 
         return $chain;
