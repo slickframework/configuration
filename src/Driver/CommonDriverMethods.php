@@ -33,7 +33,7 @@ trait CommonDriverMethods
      */
     protected function checkFile($file)
     {
-        if (! is_file($file)) {
+        if (!is_file($file)) {
             throw new FileNotFoundException(
                 "Configuration file {$file} could not be found."
             );

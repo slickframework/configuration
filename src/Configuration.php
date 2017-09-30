@@ -127,18 +127,18 @@ final class Configuration
     private function determineDriver($file)
     {
         $exception = new InvalidArgumentException(
-            "Cannot initialize the configuration driver. I could not determine " .
+            "Cannot initialize the configuration driver. I could not determine ".
             "the correct driver class."
         );
 
-        if (is_null($file) || ! is_string($file)) {
+        if (is_null($file) || !is_string($file)) {
             throw $exception;
         }
 
         $nameDivision = explode('.', $file);
         $extension = strtolower(end($nameDivision));
 
-        if (! array_key_exists($extension, $this->extensionToDriver)) {
+        if (!array_key_exists($extension, $this->extensionToDriver)) {
             throw $exception;
         }
 

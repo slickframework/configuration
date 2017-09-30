@@ -38,7 +38,7 @@ class Php implements ConfigurationInterface
         $this->filePath = $filePath;
         $this->loadSettings();
 
-        if (! is_array($this->data)) {
+        if (!is_array($this->data)) {
             throw new ParserErrorException(
                 "Configuration file {$this->filePath} could not be parse as an array. ".
                 "PHP Settings file should be a script that returns an array."

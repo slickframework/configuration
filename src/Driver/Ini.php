@@ -49,7 +49,7 @@ class Ini implements ConfigurationInterface
 
         $this->loadSettings($filePath);
 
-        if (! is_array($this->data)) {
+        if (!is_array($this->data)) {
             throw new ParserErrorException(
                 "Parse error: {$this->lastError}"
             );
@@ -58,7 +58,7 @@ class Ini implements ConfigurationInterface
 
     private function loadSettings($filePath)
     {
-        set_error_handler(function ($errorNumber, $message) {
+        set_error_handler(function($errorNumber, $message) {
             $this->lastError = $message;
             $this->lastErrorNumber = $errorNumber;
         });
