@@ -51,7 +51,7 @@ class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
             $this->lastPriority = $datum['priority'];
         }
 
-        if (! $inserted) {
+        if (!$inserted) {
             $data[] = ['element' => $element, 'priority' => $priority];
             $this->lastPriority = $priority;
         }
