@@ -27,6 +27,7 @@ You can use this Composer command to install ``slick/configuration``:
     :maxdepth: 2
 
     manual/getting-started
+    manual/multiple-configurations
     manual/contrib
     manual/license
 

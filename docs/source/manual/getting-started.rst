@@ -1,13 +1,13 @@
 .. title:: Getting started: Slick Configuration
 
 Getting started
-===============
+---------------
 
 To create a ``ConfigurationInterface`` you should use the ``Slick\Configuration`` factory class
 as it really helps you with the creation process.
 
 Basic usage
------------
+...........
 
 Lets start by creating a configuration file:
 
