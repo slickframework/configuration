@@ -5,16 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v1.2.0] - 2017-10-09
 ### Added
 - New `Slick\Configuration\PriorityConfigurationChain`
-- Environment variables driver: read from environment
+- Environment variables driver: read from environment configuration
 - New `ConfigurationChainInterface` to combine multiple configuration drivers
 - Use PHPSpec for unit tests 
 - Code of conduct
 - Issue template
 - Pull request template
-- Documentation on [Read the docs](https://readthedocs.org/)
+- Documentation on [Read the docs](https://readthedocs.org/) at [Configuration documentation](http://configuration.slick-framework.com)
 
 ### Changed
 - `Slick\Configuration::get()` method now returns a `Slick\Configuration\PriorityConfigurationChain`
