@@ -1,13 +1,13 @@
 .. title:: Getting started: Slick Configuration
 
 Getting started
-===============
+---------------
 
 To create a ``ConfigurationInterface`` you should use the ``Slick\Configuration`` factory class
 as it really helps you with the creation process.
 
 Basic usage
------------
+...........
 
 Lets start by creating a configuration file:
 
@@ -71,7 +71,7 @@ level to the array it becomes harder to use. Please check the example bellow:
     $appSettings = $settings->get('application');
     $value = $appSettings['version'];
 
-To simplify you ca use a "dot notation" to rich a deeper level.
+To simplify you ca use a "dot notation" to reach a deeper level.
 
 .. code-block:: php
 
