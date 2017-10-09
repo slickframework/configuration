@@ -71,7 +71,7 @@ level to the array it becomes harder to use. Please check the example bellow:
     $appSettings = $settings->get('application');
     $value = $appSettings['version'];
 
-To simplify you ca use a "dot notation" to rich a deeper level.
+To simplify you ca use a "dot notation" to reach a deeper level.
 
 .. code-block:: php
 

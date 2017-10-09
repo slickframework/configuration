@@ -28,6 +28,7 @@ You can use this Composer command to install ``slick/configuration``:
 
     manual/getting-started
     manual/multiple-configurations
+    api/configuration
     manual/contrib
     manual/license
 
