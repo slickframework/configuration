@@ -77,7 +77,7 @@ $appSettings = $settings->get('application');
 $value = $appSettings['version'];
 ```
 
-To simplify you ca use a “dot notation” to rich a deeper level.
+To simplify you ca use a “dot notation” to reach a deeper level.
 
 ``` php
 $value = $settings->get('application.version');
@@ -94,6 +94,8 @@ print $value;
 # the output form above is:
 # 10
 ```
+
+Please check (documentation site)[http://configuration.slick-framework.com] for a complete reference. 
 
 ## Change log
 
