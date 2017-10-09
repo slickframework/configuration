@@ -1,0 +1,4 @@
+suites:
+  slick_configuration_suite:
+    namespace: Slick\Configuration
+    psr4_prefix: Slick\Configuration

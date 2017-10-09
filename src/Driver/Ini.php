@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of slick/configuration package
+ * This file is part of Configuration
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,28 +10,59 @@
 namespace Slick\Configuration\Driver;
 
 use Slick\Configuration\ConfigurationInterface;
-use Slick\Configuration\Exception;
+use Slick\Configuration\Exception\ParserErrorException;
 
 /**
- * Ini file type configuration driver
+ * Ini configuration driver
  *
  * @package Slick\Configuration\Driver
- * @author  Filipe Silva <silvam.filipe@gmail.com>
  */
-class Ini extends AbstractDriver implements ConfigurationInterface
+class Ini implements ConfigurationInterface
 {
 
+    use CommonDriverMethods;
+
     /**
-     * Loads the data into this configuration driver
+     * @var string
      */
-    protected function load()
+    private $filePath;
+
+    /**
+     * @var string
+     */
+    private $lastError = '';
+
+    /**
+     * @var int
+     */
+    private $lastErrorNumber = 0;
+
+    /**
+     * Creates an ini configuration driver
+     *
+     * @param string $filePath
+     */
+    public function __construct($filePath)
     {
-        $data = @parse_ini_file($this->file);
-        if ($data === false) {
-            throw new Exception\ParserErrorException(
-                "Error parsing configuration file {$this->file}"
+        $this->checkFile($filePath);
+        $this->filePath = $filePath;
+
+        $this->loadSettings($filePath);
+
+        if (!is_array($this->data)) {
+            throw new ParserErrorException(
+                "Parse error: {$this->lastError}"
             );
         }
-        $this->data = $data;
+    }
+
+    private function loadSettings($filePath)
+    {
+        set_error_handler(function($errorNumber, $message) {
+            $this->lastError = $message;
+            $this->lastErrorNumber = $errorNumber;
+        });
+        $this->data = parse_ini_file($filePath, true, INI_SCANNER_TYPED);
+        restore_error_handler();
     }
 }

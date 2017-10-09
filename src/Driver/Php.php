@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of slick/configuration package
+ * This file is part of Configuration
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,28 +9,50 @@
 
 namespace Slick\Configuration\Driver;
 
-use Slick\Configuration\Exception;
 use Slick\Configuration\ConfigurationInterface;
+use Slick\Configuration\Exception\ParserErrorException;
 
 /**
- * PHP arrays
+ * Php Configuration driver
  *
  * @package Slick\Configuration\Driver
- * @author  Filipe Silva <silvam.filipe@gmail.com>
  */
-class Php extends AbstractDriver implements ConfigurationInterface
+class Php implements ConfigurationInterface
 {
+    /**
+     * @var string
+     */
+    private $filePath;
+
+    use CommonDriverMethods;
 
     /**
-     * Loads the data into this configuration driver
+     * Creates a Php configuration driver
+     *
+     * @param $filePath
      */
-    protected function load()
+    public function __construct($filePath)
     {
-        $this->data = @include($this->file);
-        if (!$this->data) {
-            throw new Exception\ParserErrorException(
-                "Error parsing configuration file {$this->file}"
+        $this->checkFile($filePath);
+
+        $this->filePath = $filePath;
+        $this->loadSettings();
+
+        if (!is_array($this->data)) {
+            throw new ParserErrorException(
+                "Configuration file {$this->filePath} could not be parse as an array. ".
+                "PHP Settings file should be a script that returns an array."
             );
         }
+    }
+
+    /**
+     * Loads settings from php array in file
+     */
+    private function loadSettings()
+    {
+        ob_start();
+        $this->data = include $this->filePath;
+        ob_end_clean();
     }
 }
