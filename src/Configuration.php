@@ -99,7 +99,6 @@ final class Configuration
      */
     public static function addPath($path)
     {
-        $path = str_replace('//', '/', rtrim($path, '/'));
         if (!in_array($path, self::$paths)) {
             array_unshift(self::$paths, $path);
         }
