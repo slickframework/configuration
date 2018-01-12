@@ -95,7 +95,7 @@ print $value;
 # 10
 ```
 
-Please check (documentation site)[http://configuration.slick-framework.com] for a complete reference. 
+Please check [documentation site](http://configuration.slick-framework.com) for a complete reference. 
 
 ## Change log
 
@@ -134,5 +134,5 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [link-travis]: https://travis-ci.org/slickframework/configuration
 [link-scrutinizer]: https://scrutinizer-ci.com/g/slickframework/configuration/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/slickframework/configuration
-[link-downloads]: https://packagist.org/packages/slickframework/configuration
+[link-downloads]: https://packagist.org/packages/slick/configuration
 [link-contributors]: https://github.com/slickframework/configuration/graphs/contributors
