@@ -49,6 +49,11 @@ final class Configuration
     ];
 
     /**
+     * @var null|ConfigurationInterface
+     */
+    private static $instance;
+
+    /**
      * Creates a configuration factory
      *
      * @param string|array $options
@@ -62,7 +67,9 @@ final class Configuration
     }
 
     /**
-     * Creates a ConfigurationInterface with passed arguments
+     * Returns the last ConfigurationInterface
+     *
+     * If there is no configuration created it will use passed arguments to create one
      *
      * @param string|array $fileName
      * @param null         $driverClass
@@ -70,6 +77,22 @@ final class Configuration
      * @return ConfigurationInterface|PriorityConfigurationChain
      */
     public static function get($fileName, $driverClass = null)
+    {
+        if (self::$instance === null) {
+            self::$instance = self::create($fileName, $driverClass);
+        }
+        return self::$instance;
+    }
+
+    /**
+     * Creates a ConfigurationInterface with passed arguments
+     *
+     * @param string|array $fileName
+     * @param null         $driverClass
+     *
+     * @return ConfigurationInterface|PriorityConfigurationChain
+     */
+    public static function create($fileName, $driverClass = null)
     {
         $configuration = new Configuration($fileName, $driverClass);
         return $configuration->initialize();
