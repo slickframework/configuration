@@ -45,6 +45,12 @@ Now we will use the ``Slick\Configuration\Configuration`` factory o create our
 
 Its really simple.
 
+.. warning::
+
+    From v1.2.2 and newer the ``Configuration::get()`` acts like a singleton call to the
+    instance created with first call to ``Configuration::get()``. If you need a new instance
+    of it you should call ``Configuration::create()`` with the same arguments.
+
 Retrieving values
 .................
 

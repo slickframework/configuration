@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [v1.2.2] - 2018-10-11
+### Added
+- New `Configuration::create()` factory method that will always create a new instance
+  of `ConfigurationInterface`.
+### Changed
+- The method `Configuration::create()` acts as a _singleton_ returning the instance created
+  when it was first call. 
+
 ## [v1.2.1] - 2018-01-11
 ### Fixed
 - File validation bug when working with phar archives.
@@ -38,7 +46,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - First release of Slick Configuration!
 
-[Unreleased]: https://github.com/slickframework/configuration/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/slickframework/configuration/compare/v1.2.2...HEAD
+[v1.2.1]: https://github.com/slickframework/configuration/compare/v1.2.1...v1.2.1
 [v1.2.1]: https://github.com/slickframework/configuration/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/slickframework/configuration/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/slickframework/configuration/compare/v1.0.0...v1.1.0

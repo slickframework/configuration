@@ -9,8 +9,10 @@
 
 namespace spec\Slick\Configuration;
 
+use PhpSpec\Exception\Example\FailureException;
 use Slick\Configuration\Configuration;
 use PhpSpec\ObjectBehavior;
+use Slick\Configuration\ConfigurationInterface;
 use Slick\Configuration\Driver\Environment;
 use Slick\Configuration\Driver\Ini;
 use Slick\Configuration\Driver\Php;
@@ -84,6 +86,26 @@ class ConfigurationSpec extends ObjectBehavior
         $chain->priorityList()->asArray()[1]->shouldBeAnInstanceOf(Php::class);
         $chain->priorityList()->asArray()[2]->shouldBeAnInstanceOf(Ini::class);
 
+    }
+
+    function it_can_be_created_through_get()
+    {
+        $this->beConstructedThrough('get', [$this->settingsFile]);
+        $this->shouldHaveType(PriorityConfigurationChain::class);
+        $object = Configuration::get('settings');
+        if ($this->getWrappedObject() !== $object) {
+            throw new FailureException("Its not the same object...");
+        }
+    }
+
+    function it_can_be_created_through_create()
+    {
+        $this->beConstructedThrough('create', [$this->settingsFile]);
+        $this->shouldHaveType(PriorityConfigurationChain::class);
+        $object = Configuration::get('settings');
+        if ($this->getWrappedObject() === $object) {
+            throw new FailureException("Its is the same object...");
+        }
     }
 
 }
