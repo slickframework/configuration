@@ -108,4 +108,18 @@ class ConfigurationSpec extends ObjectBehavior
         }
     }
 
+    function it_can_reach_nested_settings()
+    {
+        Configuration::addPath(__DIR__);
+        $this->beConstructedWith([
+            [null, Configuration::DRIVER_ENV, 10],
+            ['settings', Configuration::DRIVER_PHP, 20]
+        ]);
+
+        $settings = $this->initialize();
+
+        $settings->get('some.deep.path')->shouldBe('/foo');
+        $settings->get('some.deep.value')->shouldBe('bar');
+    }
+
 }

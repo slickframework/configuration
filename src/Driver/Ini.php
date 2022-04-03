@@ -25,24 +25,24 @@ class Ini implements ConfigurationInterface
     /**
      * @var string
      */
-    private $filePath;
+    private string $filePath;
 
     /**
      * @var string
      */
-    private $lastError = '';
+    private string $lastError = '';
 
     /**
      * @var int
      */
-    private $lastErrorNumber = 0;
+    private int $lastErrorNumber = 0;
 
     /**
      * Creates an ini configuration driver
      *
      * @param string $filePath
      */
-    public function __construct($filePath)
+    public function __construct(string $filePath)
     {
         $this->checkFile($filePath);
         $this->filePath = $filePath;
@@ -51,7 +51,7 @@ class Ini implements ConfigurationInterface
 
         if (!is_array($this->data)) {
             throw new ParserErrorException(
-                "Parse error: {$this->lastError}"
+                "Parse error: $this->lastError"
             );
         }
     }

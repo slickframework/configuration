@@ -24,7 +24,7 @@ class Environment implements ConfigurationInterface
     /**
      * @inheritdoc
      */
-    public function get($key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         $stored = self::getValue($key, false, $this->data);
         if ($stored !== false) {
@@ -42,12 +42,12 @@ class Environment implements ConfigurationInterface
     }
 
     /**
-     * Transforms the provided key to a environment variable name
+     * Transforms the provided key to an environment variable name
      *
      * @param string $key
      * @return string
      */
-    private function transformKey($key)
+    private function transformKey(string $key): string
     {
         $regEx = '/(?#! splitCamelCase Rev:20140412)
             # Split camelCase "words". Two global alternatives. Either g1of2:
@@ -60,8 +60,6 @@ class Environment implements ConfigurationInterface
         $words   = preg_split($regEx, $key);
         $envName = implode('_', $words);
         $envName = str_replace(['.', '_', '-'], '_', $envName);
-        $envName = strtoupper($envName);
-
-        return $envName;
+        return strtoupper($envName);
     }
 }
