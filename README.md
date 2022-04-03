@@ -1,10 +1,11 @@
 # Slick Configuration
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Quality Score][ico-code-quality]][link-code-quality]
-[![Total Downloads][ico-downloads]][link-downloads]
+[![GitHub release (latest SemVer)](https://img.shields.io:/github/v/release/slickframework/configuration?style=flat-square)](https://github.com/slickframework/configuration/releases)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/slickframework/configuration/Continuous%20Integration?style=flat-square)](https://github.com/slickframework/configuration/actions)
+[![Quality Score](https://img.shields.io/scrutinizer/g/slickframework/configuration/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/slickframework/configuration?branch=master)
+[![Total Downloads](https://img.shields.io/packagist/dt/slick/configuration.svg?style=flat-square)](https://packagist.org/packages/slick/configuration)
+
 
 `Slick/Configuration` is a simple package that deals with configuration files. It has a very simple
 interface that you can use to set your own configuration drivers. By default it uses the PHP arrays
@@ -21,9 +22,14 @@ Via Composer
 $ composer require slick/configuration
 ```
 
+For PHP <= 7 you should use the following:
+``` bash
+$ composer require slick/configuration:^1.2
+```
+
 ## Usage
 
-Lets start by creating a configuration file:
+Let's start by creating a configuration file:
 
 ``` php
 <?php
