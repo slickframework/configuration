@@ -21,12 +21,12 @@ interface ConfigurationInterface
      * Returns the value store with provided key or the default value.
      *
      * @param string $key     The key used to store the value in configuration
-     * @param mixed  $default The default value if no value was stored.
+     * @param mixed|null $default The default value if not found
      *
      * @return mixed The stored value or the default value if key
      *  was not found.
      */
-    public function get($key, $default = null);
+    public function get(string $key, mixed $default = null): mixed;
 
     /**
      * Set/Store the provided value with a given key.
@@ -34,7 +34,7 @@ interface ConfigurationInterface
      * @param string $key   The key used to store the value in configuration.
      * @param mixed  $value The value to store under the provided key.
      *
-     * @return $this|self Self instance for method call chains.
+     * @return ConfigurationInterface Self instance for method call chains.
      */
-    public function set($key, $value);
+    public function set(string $key, mixed $value): ConfigurationInterface;
 }

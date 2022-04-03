@@ -22,16 +22,16 @@ class Php implements ConfigurationInterface
     /**
      * @var string
      */
-    private $filePath;
+    private string $filePath;
 
     use CommonDriverMethods;
 
     /**
      * Creates a Php configuration driver
      *
-     * @param $filePath
+     * @param string $filePath
      */
-    public function __construct($filePath)
+    public function __construct(string $filePath)
     {
         $this->checkFile($filePath);
 
@@ -40,7 +40,7 @@ class Php implements ConfigurationInterface
 
         if (!is_array($this->data)) {
             throw new ParserErrorException(
-                "Configuration file {$this->filePath} could not be parse as an array. ".
+                "Configuration file $this->filePath could not be parse as an array. ".
                 "PHP Settings file should be a script that returns an array."
             );
         }

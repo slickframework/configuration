@@ -9,6 +9,7 @@
 
 namespace Slick\Configuration;
 
+use JetBrains\PhpStorm\Pure;
 use Slick\Configuration\Common\PriorityList;
 use Slick\Configuration\Driver\CommonDriverMethods;
 
@@ -23,13 +24,14 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
     /**
      * @var PriorityList|ConfigurationInterface[]
      */
-    private $priorityList;
+    private array|PriorityList $priorityList;
 
     use CommonDriverMethods;
 
     /**
      * Creates a Priority Configuration Chain
      */
+    #[Pure]
     public function __construct()
     {
         $this->priorityList = new PriorityList();
@@ -39,12 +41,12 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
      * Returns the value store with provided key or the default value.
      *
      * @param string $key     The key used to store the value in configuration
-     * @param mixed  $default The default value if no value was stored.
+     * @param mixed|null $default The default value if no value was stored.
      *
      * @return mixed The stored value or the default value if key
      *  was not found.
      */
-    public function get($key, $default = null)
+    public function get(string $key, mixed $default = null): mixed
     {
         $stored = static::getValue($key, false, $this->data);
         if ($stored !== false) {
@@ -73,7 +75,7 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
      *
      * @return ConfigurationChainInterface self
      */
-    public function add(ConfigurationInterface $config, $priority = 0)
+    public function add(ConfigurationInterface $config, int $priority = 0): ConfigurationChainInterface
     {
         $this->priorityList->insert($config, $priority);
         return $this;
@@ -84,7 +86,7 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
      *
      * @return ConfigurationInterface[]|PriorityList
      */
-    public function priorityList()
+    public function priorityList(): PriorityList|array
     {
         return $this->priorityList;
     }

@@ -9,6 +9,10 @@
 
 namespace Slick\Configuration\Common;
 
+use ArrayAccess;
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
 use Traversable;
 
 /**
@@ -16,30 +20,29 @@ use Traversable;
  *
  * @package Slick\Configuration\Common
  */
-class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
+class PriorityList implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * @var array
      */
-    private $data = [];
+    private array $data = [];
 
     /**
      * @var int
      */
-    private $lastPriority = 0;
+    private int $lastPriority = 0;
 
     /**
      * Inserts the provided element in the right order given the priority
      *
-     * The lowest priority will be the first element in the list. If no priority
-     * if given, the
+     * The lowest priority will be the first element in the list.
      *
      * @param mixed $element
-     * @param int  $priority
+     * @param int $priority
      *
      * @return PriorityList
      */
-    public function insert($element, $priority = 0)
+    public function insert(mixed $element, int $priority = 0): static
     {
         $data = [];
         $inserted = false;
@@ -61,16 +64,16 @@ class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * Tries to insert the provided element in the passed data array
+     * Tries to insert the provided element in the given data array
      *
      * @param mixed   $element
      * @param integer $priority
-     * @param array   $data
-     * @param array   $datum
+     * @param array $data
+     * @param array $datum
      *
      * @return bool
      */
-    private function tryToInsert($element, $priority, &$data, $datum)
+    private function tryToInsert(mixed $element, int $priority, array &$data, array $datum): bool
     {
         $inserted = false;
         if ($datum['priority'] > $priority) {
@@ -85,7 +88,7 @@ class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return array
      */
-    public function asArray()
+    public function asArray(): array
     {
         $data = [];
         foreach ($this->data as $datum) {
@@ -97,7 +100,7 @@ class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->data[$offset]);
     }
@@ -105,7 +108,7 @@ class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset)
     {
         return $this->data[$offset];
     }
@@ -113,7 +116,7 @@ class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value)
     {
         $this->data[$offset] = $value;
     }
@@ -121,7 +124,7 @@ class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset)
     {
         unset($this->data[$offset]);
     }
@@ -129,7 +132,7 @@ class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
@@ -137,8 +140,8 @@ class PriorityList implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function getIterator()
+    public function getIterator(): Traversable|array|ArrayIterator
     {
-        return new \ArrayIterator($this->asArray());
+        return new ArrayIterator($this->asArray());
     }
 }

@@ -14,7 +14,7 @@ use Slick\Configuration\Exception;
 
 /**
  * File Not Found Exception, trowed when trying to load a file that
- * does not exists.
+ * does not exist.
  *
  * @package Slick\Configuration\Exception
  */

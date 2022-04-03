@@ -24,9 +24,9 @@ interface ConfigurationChainInterface extends ConfigurationInterface
      * Highest priority will be verified first
      *
      * @param ConfigurationInterface $config
-     * @param integer                $priority
+     * @param integer $priority
      *
      * @return ConfigurationChainInterface self
      */
-    public function add(ConfigurationInterface $config, $priority = 0);
+    public function add(ConfigurationInterface $config, int $priority = 0): ConfigurationChainInterface;
 }
