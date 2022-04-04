@@ -33,7 +33,7 @@
       "Slick\\Tests\\Configuration\\": "tests"
     }
   },
-  "version": "v2.0.0",
+  "version": "v2.0.2",
   "extra": {
     "branch-alias": {
       "dev-master": "1.2-dev",
