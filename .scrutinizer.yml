@@ -1,7 +1,14 @@
+build:
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
+          - phpcs-run
+
 filter:
   excluded_paths:
     - spec/*
-    - functional/*
 
 checks:
   php:

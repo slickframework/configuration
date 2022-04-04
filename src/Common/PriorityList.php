@@ -108,7 +108,7 @@ class PriorityList implements ArrayAccess, Countable, IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function offsetGet(mixed $offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->data[$offset];
     }
@@ -116,7 +116,7 @@ class PriorityList implements ArrayAccess, Countable, IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function offsetSet(mixed $offset, mixed $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->data[$offset] = $value;
     }
@@ -124,7 +124,7 @@ class PriorityList implements ArrayAccess, Countable, IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function offsetUnset(mixed $offset)
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->data[$offset]);
     }
@@ -140,7 +140,7 @@ class PriorityList implements ArrayAccess, Countable, IteratorAggregate
     /**
      * @inheritdoc
      */
-    public function getIterator(): Traversable|array|ArrayIterator
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->asArray());
     }
