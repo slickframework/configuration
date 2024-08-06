@@ -22,16 +22,15 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
 {
 
     /**
-     * @var PriorityList|ConfigurationInterface[]
+     * @var PriorityList
      */
-    private array|PriorityList $priorityList;
+    private PriorityList $priorityList;
 
     use CommonDriverMethods;
 
     /**
      * Creates a Priority Configuration Chain
      */
-    #[Pure]
     public function __construct()
     {
         $this->priorityList = new PriorityList();
@@ -48,7 +47,9 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        $stored = static::getValue($key, false, $this->data);
+        $data = is_array($this->data) ? $this->data : [];
+        $stored = static::getValue($key, false, $data);
+
         if ($stored !== false) {
             return $stored;
         }
@@ -84,9 +85,9 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
     /**
      * Returns the internal configuration driver chain
      *
-     * @return ConfigurationInterface[]|PriorityList
+     * @return PriorityList
      */
-    public function priorityList(): PriorityList|array
+    public function priorityList(): PriorityList
     {
         return $this->priorityList;
     }
