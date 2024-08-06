@@ -13,17 +13,21 @@ use ArrayAccess;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use Slick\Configuration\ConfigurationInterface;
 use Traversable;
 
 /**
  * PriorityList
  *
  * @package Slick\Configuration\Common
+ *
+ * @implements ArrayAccess<int|string, ConfigurationInterface>
+ * @implements IteratorAggregate<ConfigurationInterface>
  */
 class PriorityList implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
-     * @var array
+     * @var array<int|string, array{element: ConfigurationInterface, priority: int}>
      */
     private array $data = [];
 
@@ -37,12 +41,12 @@ class PriorityList implements ArrayAccess, Countable, IteratorAggregate
      *
      * The lowest priority will be the first element in the list.
      *
-     * @param mixed $element
+     * @param ConfigurationInterface $element
      * @param int $priority
      *
-     * @return PriorityList
+     * @return PriorityList<ConfigurationInterface>
      */
-    public function insert(mixed $element, int $priority = 0): static
+    public function insert(ConfigurationInterface $element, int $priority = 0): PriorityList
     {
         $data = [];
         $inserted = false;
@@ -66,14 +70,14 @@ class PriorityList implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Tries to insert the provided element in the given data array
      *
-     * @param mixed   $element
+     * @param ConfigurationInterface   $element
      * @param integer $priority
-     * @param array $data
-     * @param array $datum
+     * @param array<string, array{element: ConfigurationInterface, priority: int}> $data
+     * @param array{element: ConfigurationInterface, priority: int} $datum
      *
      * @return bool
      */
-    private function tryToInsert(mixed $element, int $priority, array &$data, array $datum): bool
+    private function tryToInsert(ConfigurationInterface $element, int $priority, array &$data, array $datum): bool
     {
         $inserted = false;
         if ($datum['priority'] > $priority) {
@@ -86,7 +90,7 @@ class PriorityList implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Returns the inserted elements in the order given by priority as an array
      *
-     * @return array
+     * @return array<int|string, ConfigurationInterface>
      */
     public function asArray(): array
     {
@@ -107,10 +111,11 @@ class PriorityList implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * @inheritdoc
+     * @return ConfigurationInterface
      */
-    public function offsetGet(mixed $offset): mixed
+    public function offsetGet(mixed $offset): ?ConfigurationInterface
     {
-        return $this->data[$offset];
+        return $this->data[$offset] ? $this->data[$offset]['element'] : null;
     }
 
     /**
@@ -118,7 +123,9 @@ class PriorityList implements ArrayAccess, Countable, IteratorAggregate
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        $this->data[$offset] = $value;
+        if ($value instanceof ConfigurationInterface) {
+            $this->insert($value);
+        }
     }
 
     /**
@@ -139,6 +146,7 @@ class PriorityList implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * @inheritdoc
+     * @return Traversable<ConfigurationInterface>
      */
     public function getIterator(): Traversable
     {
