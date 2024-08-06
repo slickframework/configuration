@@ -2,14 +2,14 @@
 
 [![GitHub release (latest SemVer)](https://img.shields.io:/github/v/release/slickframework/configuration?style=flat-square)](https://github.com/slickframework/configuration/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/slickframework/configuration/Continuous%20Integration?style=flat-square)](https://github.com/slickframework/configuration/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/slickframework/configuration/continuous-integration.yml?style=flat-square)](https://github.com/slickframework/configuration/actions/workflows/continuous-integration.yml)
 [![Quality Score](https://img.shields.io/scrutinizer/g/slickframework/configuration/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/slickframework/configuration?branch=master)
 [![Total Downloads](https://img.shields.io/packagist/dt/slick/configuration.svg?style=flat-square)](https://packagist.org/packages/slick/configuration)
 
 
-`Slick/Configuration` is a simple package that deals with configuration files. It has a very simple
-interface that you can use to set your own configuration drivers. By default it uses the PHP arrays
-for configuration as it does not need any parser and therefore is more performance friendly.
+The `slick/configuration` component provides an easy-to-use solution for managing configuration files in your
+PHP applications. It features a straightforward interface that allows you to define custom configuration drivers.
+By default, it leverages PHP arrays for configuration, eliminating the need for parsers and enhancing performance.
 
 This package is compliant with PSR-2 code standards and PSR-4 autoload standards. It
 also applies the [semantic version 2.0.0](http://semver.org) specification.
@@ -22,86 +22,9 @@ Via Composer
 $ composer require slick/configuration
 ```
 
-For PHP <= 7 you should use the following:
-``` bash
-$ composer require slick/configuration:^1.2
-```
-
 ## Usage
 
-Let's start by creating a configuration file:
-
-``` php
-<?php
-/**
- * App configuration file
- */
-namespace settings;
-
-$settings = [];
-$settings['application'] = [
-    'version' => 'v1.0.0',
-    'environment' => 'develop'
-];
-return $settings;
-```
-
-we save this file as `./settings.php`. We are using plain PHP arrays for configuration files. Don’t forget to add the `return` statement at the end of the file so that the defined array could be assigned when initializing the driver.
-
-#### Creating a Configuration
-
-Now we will use the `Slick\Configuration\Configuration` factory o create our `Slick\Configuration\ConfigurationInterface`:
-
-``` php
-use Slick\Configuration\Configuration;
-
-$settings = Configuration::get('settings');
-```
-
-Its really simple.
-
-#### Retrieving values
-
-Now lets use it.
-
-``` php
-print_r($settings->get('application'));
-
-# the output form above is:
-# Array (
-#    [version] => v1.0.0,
-#    [environment] => develop
-# )
-```
-
-You can set any level of nesting in your configuration array but as you add another level to the array it becomes harder to use. Please check the example bellow:
-
-``` php
-$value = $settings->get('application')['version'];
-// OR
-$appSettings = $settings->get('application');
-$value = $appSettings['version'];
-```
-
-To simplify you ca use a “dot notation” to reach a deeper level.
-
-``` php
-$value = $settings->get('application.version');
-```
-
-#### Default values
-
-It is possible to have a default value when no key is found on a configuration driver. By default if a key is not found a `NULL` is returned but if you specify a value it will be returned by the `ConfigurationInterface::get()` method:
-
-``` php
-$value = $settings->get('application.rowsPerPage', 10);
-print $value;
-
-# the output form above is:
-# 10
-```
-
-Please check [documentation site](http://configuration.slick-framework.com) for a complete reference. 
+Please check [documentation site](http://www.slick-framework.com/documentation/configuration.html) for a complete reference. 
 
 ## Change log
 
@@ -137,7 +60,6 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [ico-downloads]: https://img.shields.io/packagist/dt/slick/configuration.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/slick/configuration
-[link-travis]: https://travis-ci.org/slickframework/configuration
 [link-scrutinizer]: https://scrutinizer-ci.com/g/slickframework/configuration/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/slickframework/configuration
 [link-downloads]: https://packagist.org/packages/slick/configuration
