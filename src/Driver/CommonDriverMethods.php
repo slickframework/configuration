@@ -21,9 +21,9 @@ trait CommonDriverMethods
 {
 
     /**
-     * @var array|bool
+     * @var array<string, mixed>
      */
-    protected array|bool $data = [];
+    protected array|int $data = [];
 
     /**
      * Checks if provided file exists
@@ -51,7 +51,8 @@ trait CommonDriverMethods
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        return static::getValue($key, $default, $this->data);
+        $data = is_array($this->data) ? $this->data : [];
+        return static::getValue($key, $default, $data);
     }
 
     /**
@@ -73,7 +74,7 @@ trait CommonDriverMethods
      *
      * @param string $key     The key/index to search
      * @param mixed  $default The value if key doesn't exist
-     * @param array $data    The data to search
+     * @param array<string, mixed> $data    The data to search
      *
      * @return mixed The stored value or the default value if key
      *               or index don't exist
@@ -96,7 +97,7 @@ trait CommonDriverMethods
      *
      * @param string $key   The key used to store the value in configuration.
      * @param mixed  $value The value to store under the provided key.
-     * @param array $data  The data to search
+     * @param array<string, mixed> $data  The data to search
      */
     public static function setValue(string $key, mixed $value, array &$data): void
     {

@@ -49,7 +49,7 @@ class Php implements ConfigurationInterface
     /**
      * Loads settings from php array in file
      */
-    private function loadSettings()
+    private function loadSettings(): void
     {
         ob_start();
         $this->data = include $this->filePath;

@@ -26,7 +26,8 @@ class Environment implements ConfigurationInterface
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        $stored = self::getValue($key, false, $this->data);
+        $data = is_array($this->data) ? $this->data : $default;
+        $stored = self::getValue($key, false, $data);
         if ($stored !== false) {
             return $stored;
         }
@@ -36,7 +37,7 @@ class Environment implements ConfigurationInterface
 
         if ($fromEnvironment !== false) {
             $value = $fromEnvironment;
-            self::setValue($key, $value, $this->data);
+            self::setValue($key, $value, $data);
         }
         return $value;
     }
@@ -58,7 +59,7 @@ class Environment implements ConfigurationInterface
             /x';
 
         $words   = preg_split($regEx, $key);
-        $envName = implode('_', $words);
+        $envName = implode('_', is_array($words) ? $words : null);
         $envName = str_replace(['.', '_', '-'], '_', $envName);
         return strtoupper($envName);
     }
