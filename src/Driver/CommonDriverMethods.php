@@ -105,12 +105,18 @@ trait CommonDriverMethods
         $first = array_shift($parts);
         if (count($parts) > 0) {
             $newKey = implode('.', $parts);
-            if (!array_key_exists($first, $data)) {
-                $data[$first] = array();
-            }
+            $data[$first] = array_key_exists($first, $data) ? [$first => $data[$first]] : [];
             static::setValue($newKey, $value, $data[$first]);
             return;
         }
         $data[$first] = $value;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function asArray(): array
+    {
+        return is_array($this->data) ? $this->data : [];
     }
 }

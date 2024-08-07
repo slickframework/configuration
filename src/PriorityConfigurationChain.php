@@ -26,7 +26,12 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
      */
     private PriorityList $priorityList;
 
-    use CommonDriverMethods;
+    private bool $dirty = true;
+
+    use CommonDriverMethods {
+        get as private baseGet;
+        set as private baseSet;
+    }
 
     /**
      * Creates a Priority Configuration Chain
@@ -39,7 +44,7 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
     /**
      * Returns the value store with provided key or the default value.
      *
-     * @param string $key     The key used to store the value in configuration
+     * @param string $key The key used to store the value in configuration
      * @param mixed|null $default The default value if no value was stored.
      *
      * @return mixed The stored value or the default value if key
@@ -47,22 +52,19 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        $data = is_array($this->data) ? $this->data : [];
-        $stored = static::getValue($key, false, $data);
-
-        if ($stored !== false) {
-            return $stored;
+        if ($this->dirty) {
+            $this->mergeValues();
         }
+        return $this->baseGet($key, $default);
+    }
 
-        foreach ($this->priorityList as $driver) {
-            $value = $driver->get($key, false);
-            if ($value !== false) {
-                $default = $value;
-                static::setValue($key, $value, $this->data);
-                break;
-            }
+    public function set(string $key, mixed $value): self
+    {
+        if ($this->dirty) {
+            $this->mergeValues();
         }
-        return $default;
+        $this->baseSet($key, $value);
+        return $this;
     }
 
     /**
@@ -79,6 +81,7 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
     public function add(ConfigurationInterface $config, int $priority = 0): ConfigurationChainInterface
     {
         $this->priorityList->insert($config, $priority);
+        $this->dirty = true;
         return $this;
     }
 
@@ -90,5 +93,49 @@ class PriorityConfigurationChain implements ConfigurationChainInterface
     public function priorityList(): PriorityList
     {
         return $this->priorityList;
+    }
+
+    private function mergeValues(): void
+    {
+        $this->dirty = false;
+        $data = [];
+        $elements = array_reverse($this->priorityList->asArray());
+        foreach ($elements as $element) {
+            $data = $this->mergeArrays($data, $element->asArray());
+        }
+        $this->data = $data;
+    }
+
+    /**
+     * Merges two arrays recursively, overriding values from the default array with
+     * values from the custom array.
+     *
+     * @param array<string, mixed> $default The default array.
+     * @param array<string, mixed> $custom The custom array.
+     *
+     * @return array<string, mixed> The merged array.
+     */
+    private function mergeArrays(array $default, array $custom): array
+    {
+        $base = [];
+        $names = [];
+        foreach ($default as $name => $value) {
+            $isPresent = array_key_exists($name, $custom);
+            $names[] = $name;
+            if (is_array($value) && $isPresent) {
+                $base[$name] = $this->mergeArrays($value, $custom[$name]);
+                continue;
+            }
+
+            $base[$name] = $isPresent ? $custom[$name] : $value;
+        }
+
+        foreach ($custom as $other => $value) {
+            if (!in_array($other, $names)) {
+                $base[$other] = $value;
+            }
+        }
+
+        return $base;
     }
 }
