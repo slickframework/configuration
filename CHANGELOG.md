@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Code quality verification with phpmd and phpstan
 ### Fixed
-- Configuration chain fails to retrieve nested data issue#3
+- Configuration chain fails to retrieve nested data issue #3
 ### Changed
 - `phpspec` upgrade to work with PHP >= 8.2
 ### Removed
