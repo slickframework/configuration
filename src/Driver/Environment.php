@@ -21,45 +21,20 @@ class Environment implements ConfigurationInterface
 
     use CommonDriverMethods;
 
-    /**
-     * @inheritdoc
-     */
-    public function get(string $key, mixed $default = null): mixed
+    public function __construct()
     {
-        $stored = self::getValue($key, false, $this->data);
-        if ($stored !== false) {
-            return $stored;
+        $envVars = getenv();
+        if (!is_array($envVars)) {
+            return;
         }
 
-        $value = $default;
-        $fromEnvironment = getenv($this->transformKey($key));
-
-        if ($fromEnvironment !== false) {
-            $value = $fromEnvironment;
-            self::setValue($key, $value, $this->data);
+        foreach ($envVars as $key => $value) {
+            $this->set($this->createKey($key), $value);
         }
-        return $value;
     }
 
-    /**
-     * Transforms the provided key to an environment variable name
-     *
-     * @param string $key
-     * @return string
-     */
-    private function transformKey(string $key): string
+    private function createKey(string $envName): string
     {
-        $regEx = '/(?#! splitCamelCase Rev:20140412)
-            # Split camelCase "words". Two global alternatives. Either g1of2:
-              (?<=[a-z])      # Position is after a lowercase,
-              (?=[A-Z])       # and before an uppercase letter.
-            | (?<=[A-Z])      # Or g2of2; Position is after uppercase,
-              (?=[A-Z][a-z])  # and before upper-then-lower case.
-            /x';
-
-        $words   = preg_split($regEx, $key);
-        $envName = implode('_', $words);
-        $envName = str_replace(['.', '_', '-'], '_', $envName);
-        return strtoupper($envName);
+        return trim(strtolower(str_replace('_', '.', $envName)), '.');
     }
 }

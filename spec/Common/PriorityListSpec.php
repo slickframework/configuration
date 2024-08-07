@@ -11,6 +11,7 @@ namespace spec\Slick\Configuration\Common;
 
 use Slick\Configuration\Common\PriorityList;
 use PhpSpec\ObjectBehavior;
+use Slick\Configuration\ConfigurationInterface;
 
 /**
  * PriorityListSpec specs
@@ -34,9 +35,9 @@ class PriorityListSpec extends ObjectBehavior
         $this->shouldImplement(\IteratorAggregate::class);
     }
 
-    function it_can_insert_objects()
+    function it_can_insert_objects(ConfigurationInterface $driver)
     {
-        $this->insert((object) [], 10)->shouldBe($this->getWrappedObject());
+        $this->insert($driver, 10)->shouldBe($this->getWrappedObject());
     }
 
     function it_can_be_converted_to_array()
@@ -44,21 +45,27 @@ class PriorityListSpec extends ObjectBehavior
         $this->asArray()->shouldBeArray();
     }
 
-    function it_adds_elements_with_a_given_priority()
-    {
+    function it_adds_elements_with_a_given_priority(
+        ConfigurationInterface $driver1,
+        ConfigurationInterface $driver2,
+        ConfigurationInterface $driver3,
+    ) {
 
-        $this->insert(1, 10)
-            ->insert(2, 20)
-            ->insert(3, 15);
+        $this->insert($driver1, 10)
+            ->insert($driver2, 20)
+            ->insert($driver3, 15);
         $array = $this->asArray();
-        $array[2]->shouldBe(2);
+        $array[2]->shouldBe($driver2);
     }
 
-    function it_can_be_counted()
-    {
-        $this->insert(1, 10)
-            ->insert(2, 20)
-            ->insert(3, 15);
+    function it_can_be_counted(
+        ConfigurationInterface $driver1,
+        ConfigurationInterface $driver2,
+        ConfigurationInterface $driver3
+    ) {
+        $this->insert($driver1, 10)
+            ->insert($driver2, 20)
+            ->insert($driver3, 15);
         $this->shouldBeAnInstanceOf(\Countable::class);
         $this->count()->shouldBe(3);
     }

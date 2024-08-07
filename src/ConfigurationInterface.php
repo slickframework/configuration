@@ -37,4 +37,11 @@ interface ConfigurationInterface
      * @return ConfigurationInterface Self instance for method call chains.
      */
     public function set(string $key, mixed $value): ConfigurationInterface;
+
+    /**
+     * Returns the settings values as an associative array
+     *
+     * @return array<string, mixed>
+     */
+    public function asArray(): array;
 }

@@ -25,24 +25,30 @@ final class Configuration
 {
     /**@#+
      * Known configuration drivers
+     * @var class-string
      */
     const DRIVER_INI = Ini::class;
     const DRIVER_PHP = Php::class;
     const DRIVER_ENV = Environment::class;
     /**@#- */
 
+    /** @var array<class-string>|string[]  */
     private array $extensionToDriver = [
         'ini' => self::DRIVER_INI,
         'php' => self::DRIVER_PHP,
     ];
 
+    /**
+     * @var string|array<int|string, mixed>|null
+     */
     private string|array|null $file;
 
     /**
-     * @var null|string
+     * @var null|class-string
      */
     private ?string $driverClass;
 
+    /** @var array<string>|string[]  */
     private static array $paths = [
         './'
     ];
@@ -55,14 +61,15 @@ final class Configuration
     /**
      * Creates a configuration factory
      *
-     * @param array|string|null $options
-     * @param null         $driverClass
+     * @param array<int|string, mixed>|string|null $options
+     * @param null|class-string                    $driverClass
      */
-    public function __construct(array|string $options = null, $driverClass = null)
+    public function __construct(array|string $options = null, ?string $driverClass = null)
     {
         $this->file = $options;
         $this->driverClass = $driverClass;
-        self::addPath(getcwd());
+        $path = getcwd();
+        self::addPath(is_string($path) ? $path : './');
     }
 
     /**
@@ -70,15 +77,15 @@ final class Configuration
      *
      * If there is no configuration created it will use passed arguments to create one
      *
-     * @param array|string $fileName
-     * @param null $driverClass
+     * @param array<int|string, mixed>|string $fileName
+     * @param null|class-string $driverClass
      *
      * @return PriorityConfigurationChain|ConfigurationInterface|null
      * @throws ReflectionException
      */
     public static function get(
         array|string $fileName,
-        $driverClass = null
+        ?string $driverClass = null
     ): PriorityConfigurationChain|ConfigurationInterface|null {
         if (self::$instance === null) {
             self::$instance = self::create($fileName, $driverClass);
@@ -89,15 +96,15 @@ final class Configuration
     /**
      * Creates a ConfigurationInterface with passed arguments
      *
-     * @param array|string $fileName
-     * @param null $driverClass
+     * @param array<int|string, mixed>|string $fileName
+     * @param null|class-string $driverClass
      *
      * @return ConfigurationInterface|PriorityConfigurationChain
      * @throws ReflectionException
      */
     public static function create(
         array|string $fileName,
-        $driverClass = null
+        ?string $driverClass = null
     ): PriorityConfigurationChain|ConfigurationInterface {
         $configuration = new Configuration($fileName, $driverClass);
         return $configuration->initialize();
@@ -126,7 +133,7 @@ final class Configuration
      *
      * @param string $path
      */
-    public static function addPath(string $path)
+    public static function addPath(string $path): void
     {
         if (!in_array($path, self::$paths)) {
             array_unshift(self::$paths, $path);
@@ -136,12 +143,14 @@ final class Configuration
     /**
      * Returns the driver class to be initialized
      *
-     * @return mixed|null|string
+     * @return class-string
      */
-    private function driverClass(): mixed
+    private function driverClass(): string
     {
         if (null == $this->driverClass) {
-            $this->driverClass = $this->determineDriver($this->file);
+            $fromArray = is_array($this->file) && isset($this->file[1]) ? $this->file[1] : null;
+            $name = is_array($this->file) ? $fromArray : $this->file;
+            $this->driverClass = $this->determineDriver($name);
         }
         return $this->driverClass;
     }
@@ -238,7 +247,7 @@ final class Configuration
      * @param string $name
      * @param string $withExtension
      *
-     * @return array
+     * @return array{bool, string}
      */
     private function searchFor(string $name, string $withExtension): array
     {
@@ -276,7 +285,7 @@ final class Configuration
     /**
      * Sets the file and driver class
      *
-     * @param array $option
+     * @param array{?string, ?class-string, ?int} $option
      *
      * @return int
      */
@@ -291,9 +300,9 @@ final class Configuration
     /**
      * Fixes the file for initialization
      *
-     * @return array|string|null
+     * @return array<int|string, mixed>
      */
-    private function fixOptions(): array|string|null
+    private function fixOptions(): array
     {
         return (is_array($this->file))
             ? $this->file

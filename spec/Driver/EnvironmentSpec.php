@@ -33,14 +33,7 @@ class EnvironmentSpec extends ObjectBehavior
 
     function it_reads_environment_values()
     {
-        putenv("FOO=its a test");
-        $this->get('foo')->shouldBe('its a test');
-    }
-
-    function it_transforms_a_key_into_a_variable_name()
-    {
-        putenv("FOO_BAR_BAS_LAST=its a test");
-        $this->get('fooBar.bas_last')->shouldBe('its a test');
+        $this->get('xdebug.mode')->shouldBe('develop,debug,coverage');
     }
 
     function it_returns_a_default_value_if_a_given_key_is_not_found()

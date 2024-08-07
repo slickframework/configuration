@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Code quality verification with phpmd and phpstan
+### Changed
+- `phpspec` upgrade to work with PHP >= 8.2
+### Removed
+- Support for PHP <= 8.1
+- Documentation on [Read the docs](https://readthedocs.org/) at [Configuration documentation](http://configuration.slick-framework.com)
+
 ## [v2.0.1] - 2022-04-04
 ### Added
 - Support for PHP 8.X
