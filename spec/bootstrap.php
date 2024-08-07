@@ -7,4 +7,4 @@
  * file that was distributed with this source code.
  */
 
-putenv('XDEBUG_MODE=develop,debug,coverage');
+putenv('TESTENV_MODE=develop,debug,coverage');

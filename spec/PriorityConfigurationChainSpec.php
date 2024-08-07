@@ -118,7 +118,7 @@ class PriorityConfigurationChainSpec extends ObjectBehavior
     function it_should_merge_all_settings_with_prioriry()
     {
         $this->add(new Environment(), 10)->add(new Php(__DIR__.'/settings.php'), 20);
-        $this->get('xdebug')->shouldBe([
+        $this->get('testenv')->shouldBe([
             'enabled' => true,
             'mode' => "develop,debug,coverage",
         ]);

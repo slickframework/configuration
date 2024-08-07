@@ -7,7 +7,7 @@ $settings = [
             'value' => 'bar'
         ]
     ],
-    'xdebug' => [
+    'testenv' => [
         'enabled' => true
     ]
 ];

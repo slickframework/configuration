@@ -33,7 +33,7 @@ class EnvironmentSpec extends ObjectBehavior
 
     function it_reads_environment_values()
     {
-        $this->get('xdebug.mode')->shouldBe('develop,debug,coverage');
+        $this->get('testenv.mode')->shouldBe('develop,debug,coverage');
     }
 
     function it_returns_a_default_value_if_a_given_key_is_not_found()
