@@ -3,3 +3,6 @@ composer.phar
 build
 *.DS_Store
 .idea
+/vendor/
+docker-compose.override.yml
+.phpunit.result.cache

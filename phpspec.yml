@@ -1,3 +1,4 @@
+bootstrap: spec/bootstrap.php
 suites:
   slick_configuration_suite:
     namespace: Slick\Configuration

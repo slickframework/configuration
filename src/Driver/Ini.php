@@ -25,17 +25,7 @@ class Ini implements ConfigurationInterface
     /**
      * @var string
      */
-    private string $filePath;
-
-    /**
-     * @var string
-     */
     private string $lastError = '';
-
-    /**
-     * @var int
-     */
-    private int $lastErrorNumber = 0;
 
     /**
      * Creates an ini configuration driver
@@ -45,7 +35,6 @@ class Ini implements ConfigurationInterface
     public function __construct(string $filePath)
     {
         $this->checkFile($filePath);
-        $this->filePath = $filePath;
 
         $this->loadSettings($filePath);
 
@@ -56,13 +45,14 @@ class Ini implements ConfigurationInterface
         }
     }
 
-    private function loadSettings($filePath)
+    private function loadSettings(string $filePath): void
     {
-        set_error_handler(function($errorNumber, $message) {
-            $this->lastError = $message;
-            $this->lastErrorNumber = $errorNumber;
+        set_error_handler(function (int $errorNumber, string $message): bool {
+            $this->lastError = "$errorNumber: $message";
+            return true;
         });
-        $this->data = parse_ini_file($filePath, true, INI_SCANNER_TYPED);
+        $parsedFile = parse_ini_file($filePath, true, INI_SCANNER_TYPED);
+        $this->data = is_array($parsedFile) ? $parsedFile : 0;
         restore_error_handler();
     }
 }

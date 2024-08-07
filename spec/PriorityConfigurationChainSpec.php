@@ -10,8 +10,11 @@
 namespace spec\Slick\Configuration;
 
 use Slick\Configuration\Common\PriorityList;
+use Slick\Configuration\Configuration;
 use Slick\Configuration\ConfigurationChainInterface;
 use Slick\Configuration\ConfigurationInterface;
+use Slick\Configuration\Driver\Environment;
+use Slick\Configuration\Driver\Php;
 use Slick\Configuration\PriorityConfigurationChain;
 use PhpSpec\ObjectBehavior;
 
@@ -52,17 +55,16 @@ class PriorityConfigurationChainSpec extends ObjectBehavior
     function it_retrieves_a_configuration_value_stored_under_a_key(
         ConfigurationInterface $driverA,
         ConfigurationInterface $driverB
-    )
-    {
-        $this->add($driverA ,100);
+    ) {
+        $this->add($driverA, 100);
         $this->add($driverB, 10);
 
-        $driverA->get('foo', false)->willReturn('fooA');
-        $driverB->get('foo', false)->willReturn(false);
+        $driverA->asArray()->willReturn(['foo' => 'fooA']);
+        $driverB->asArray()->willReturn([]);
 
         $this->get('foo')->shouldBe('fooA');
-        $driverA->get('foo', false)->shouldHaveBeenCalled();
-        $driverB->get('foo', false)->shouldHaveBeenCalled();
+        $driverA->asArray()->shouldHaveBeenCalled();
+        $driverB->asArray()->shouldHaveBeenCalled();
     }
 
     function it_retrieves_a_configuration_value_respecting_chain_priority(
@@ -73,25 +75,12 @@ class PriorityConfigurationChainSpec extends ObjectBehavior
         $this->add($driverA ,100);
         $this->add($driverB, 10);
 
-        $driverA->get('bar', false)->willReturn('fooA');
-        $driverB->get('bar', false)->willReturn('fooB');
+        $driverA->asArray()->willReturn(['bar' => 'fooA']);
+        $driverB->asArray()->willReturn(['bar' => 'fooB']);
 
         $this->get('bar')->shouldBe('fooB');
-        $driverA->get('bar', false)->shouldNotHaveBeenCalled();
-        $driverB->get('bar', false)->shouldHaveBeenCalled();
-    }
-
-    function it_store_requested_values_in_internal_cache(
-        ConfigurationInterface $driverA
-    )
-    {
-        $this->add($driverA ,10);
-        $driverA->get('bar', false)->willReturn('fooA');
-
-        $this->get('bar')->shouldBe('fooA');
-
-        $this->get('bar')->shouldBe('fooA');
-        $driverA->get('bar', false)->shouldHaveBeenCalledTimes(1);
+        $driverA->asArray()->shouldHaveBeenCalled();
+        $driverB->asArray()->shouldHaveBeenCalled();
     }
 
     function it_returns_a_default_value_if_a_given_key_is_not_found()
@@ -105,9 +94,12 @@ class PriorityConfigurationChainSpec extends ObjectBehavior
         ConfigurationInterface $driverA
     )
     {
-        $driverA->get('first.second.third', false)->willReturn(123);
+        $driverA->asArray()->willReturn([
+            'first' => [
+                'second' => ['third' => 123]
+            ]
+        ]);
         $this->add($driverA);
-
         $this->get('first.second.third')->shouldBe(123);
     }
 
@@ -121,5 +113,14 @@ class PriorityConfigurationChainSpec extends ObjectBehavior
     {
         $this->set('value.under.deep', 'path')->shouldBe($this->getWrappedObject());
         $this->get('value.under.deep')->shouldBe('path');
+    }
+
+    function it_should_merge_all_settings_with_prioriry()
+    {
+        $this->add(new Environment(), 10)->add(new Php(__DIR__.'/settings.php'), 20);
+        $this->get('testenv')->shouldBe([
+            'enabled' => true,
+            'mode' => "develop,debug,coverage",
+        ]);
     }
 }

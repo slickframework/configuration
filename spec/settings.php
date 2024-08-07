@@ -6,6 +6,10 @@ $settings = [
             'path' => '/foo',
             'value' => 'bar'
         ]
+    ],
+    'testenv' => [
+        'enabled' => true
     ]
 ];
+
 return $settings;
